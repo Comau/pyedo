@@ -8,6 +8,8 @@ Download the SDK from our site. Drag and drop the "pyedo" package into the pytho
 
 "C:\Users\YourAccount\AppData\Local\Programs\Python\PythonXX\Lib\site-packages\"
 
+Otherwise you can use the command line: pip install pyedo
+
 You are now able to connect your device with e.DO via Python.
 Create a new program, import the object from the pyedo library, create an instance of an eDO object in your program and now move e.DO with the available methods defined below.
 
