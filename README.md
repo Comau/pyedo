@@ -1,17 +1,32 @@
-# pyedo
+Pyedo
+=======================================
+
 This package contains the SDK to program e.DO robot with Python
+<img src="https://edo.cloud/wp-content/uploads/2018/12/edo-home.png" alt="pyedo logo" width="100px"/> 
+
 
 # Programming e.DO with Python
+
+Quick start
+-----------
 Install the latest Python version on your device:
 
 Download the SDK from our site. Drag and drop the "pyedo" package into the python path site packages.
 
 "C:\Users\YourAccount\AppData\Local\Programs\Python\PythonXX\Lib\site-packages\"
 
-Otherwise you can use the command line: pip install pyedo
+Pyedo can be installed using pip:
 
-You are now able to connect your device with e.DO via Python.
+    $ pip install pyedo
+
+# How to start:
 Create a new program, import the object from the pyedo library, create an instance of an eDO object in your program and now move e.DO with the available methods defined below.
+
+```python
+from pyedo import edo # import the object from the pyedo library
+myedo = edo('10.42.0.49') # create an instance of an eDO object
+```
+You are now able to connect your device with e.DO via Python.
 
 # INIT
 This method allows to initialize the e.DO robot, with or without gripper:
@@ -82,3 +97,19 @@ Velocity
 Current
 cartesianPosition]
 
+# How to calibrate the robot
+
+This example allows you to initialize, disengage the brakes and calibrate the axes, if already in the "Home" position, through a Python program.
+
+If you have not the e.DO robot in Home Position don't use this program, connect e.DO with the e.DO App and use the standard calibration, when the robot will be calibrated connect python without init and calibrate functions, because this part has been already done.
+
+Turn on the e.DO robot, the init_7Axes() command line should only be used once after power on, disengage_std() is useful for disengaging the brakes every time the brakes are applied, the last command line calib_axes() is very important for correct operation and must be sent when the notches of the joints are aligned (“Home position").
+
+```python
+def StartUp(myedo):
+    myedo.init_7Axes()
+    time.sleep(10)
+    myedo.disengage_std()
+    time.sleep(15)
+    myedo.calib_axes() # Mandatory in HOME POSITION
+```
