@@ -7,17 +7,21 @@ This package contains the SDK to program e.DO robot with Python
 
 # Programming e.DO with Python
 
-Quick start
+Quick installation
 -----------
-Install the latest Python version on your device:
+Install the Python version on your device, we suggest python >= 3.7.5 :
 
-Download the SDK from our site. Drag and drop the "pyedo" package into the python path site packages.
+https://www.python.org/downloads/
+
+There are two possibilities to install pyedo on your environment:
+
+- Download the SDK from our site. Drag and drop the "pyedo" package into the python path site packages.
 
 "C:\Users\YourAccount\AppData\Local\Programs\Python\PythonXX\Lib\site-packages\"
 
-Pyedo can be installed using pip:
+- Pyedo can be installed using pip:
 
-    $ pip install pyedo
+        $ pip install pyedo
 
 # How to start:
 Create a new program, import the object from the pyedo library, create an instance of an eDO object in your program and now move e.DO with the available methods defined below.
@@ -27,6 +31,8 @@ from pyedo import edo # import the object from the pyedo library
 myedo = edo('10.42.0.49') # create an instance of an eDO object
 ```
 You are now able to connect your device with e.DO via Python.
+
+The addresses available for e.DO are: '10.42.0.49' for the Ethernet/LAN connection and '192.168.12.1' for the WiFi connection
 
 # INIT
 This method allows to initialize the e.DO robot, with or without gripper:
@@ -101,7 +107,7 @@ cartesianPosition]
 
 This example allows you to initialize, disengage the brakes and calibrate the axes, if already in the "Home" position, through a Python program.
 
-If you have not the e.DO robot in Home Position don't use this program, connect e.DO with the e.DO App and use the standard calibration, when the robot will be calibrated connect python without init and calibrate functions, because this part has been already done.
+If you have not the e.DO robot in Home Position don't use this program, connect e.DO with the e.DO App and use the standard calibration, when the robot will be calibrated disconnect the e.DO App with the proper button and connect python without init, disengage and calibrate functions, because this part has been already done.
 
 Turn on the e.DO robot, the init_7Axes() command line should only be used once after power on, disengage_std() is useful for disengaging the brakes every time the brakes are applied, the last command line calib_axes() is very important for correct operation and must be sent when the notches of the joints are aligned (“Home position").
 
