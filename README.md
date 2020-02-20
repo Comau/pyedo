@@ -34,6 +34,10 @@ You are now able to connect your device with e.DO via Python.
 
 The addresses available for e.DO are: '10.42.0.49' for the Ethernet/LAN connection and '192.168.12.1' for the WiFi connection
 
+-----------
+<img src="https://github.com/Comau/pyedo/blob/master/pyedo/examples/pyedo.png?raw=true"/> 
+
+
 # INIT
 This method allows to initialize the e.DO robot, with or without gripper:
 - init_7Axes() :
