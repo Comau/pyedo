@@ -98,7 +98,7 @@ class edo(object):
         #self.KeyButton = 0
         #self.Mode = MoveType.JOINT.value
         #self.Joint_Selected = 1
-        self.stepByStep = True #T = wait the end of current e.DO movement before moving to next command
+        self.stepByStep = False #T = wait the end of current e.DO movement before moving to next command
         #CONNECTION TO e.DO
         client = roslibpy.Ros(self.host, self.port) # Wi-Fi
         client.run()
@@ -134,7 +134,7 @@ class edo(object):
             "reduction_factor": 0.0
         }
         self.JointInit.publish(roslibpy.Message(self.command))
-        if self.verbose : print('e.DO with Gripper has been initialized')
+        print('e.DO with Gripper has been initialized')
     
     # INITIALIZATION of the Robot with 6 Joints
     def init6Axes(self):
@@ -144,11 +144,12 @@ class edo(object):
             "reduction_factor": 0.0
         }
         self.JointInit.publish(roslibpy.Message(self.command))
-        if self.verbose : print('e.DO with 6 Joints has been initialized')
+        print('e.DO with 6 Joints has been initialized')
 
     # INITIALIZATION of the Robot with the Gripper (default = 6 axes + gripper) [wrapper]
     def initMyedo(self):
-        init7Axes(self)
+        self.init7Axes()
+        
     # STANDARD DISENGAGE of the Robot    
     def disengageStd(self):
         self.command = {**self.commandTemplate}
@@ -161,7 +162,7 @@ class edo(object):
         if self.verbose: print('Standard Disengage')
     
     # SINUSOIDAL DISENGAGE of the Robot 
-    def disengage_sin(self):
+    def disengageSin(self):
         self.command = {**self.commandTemplate}
         self.command = {
             'joints_mask': MaskType.JOINT_MASK7.value,
@@ -189,7 +190,6 @@ class edo(object):
         self.JointCalibration.publish(roslibpy.Message(self.command))
         if self.verbose: print('Calibration Axes')
     
-
     #SET SPEED (Default = 100%, values bigger than 100 not accepted)
     def setSpeed(self, ovr = 100):
         if ovr > 100: 
@@ -200,8 +200,6 @@ class edo(object):
             ovr = 0     
         self.commandTemplate['ovr'] = ovr
         
-
-
     def rodeo(self):
         rodeoMovements = [[90, 50, -90, 0, 40, -90, 0], [-45, -50, 90, 0, -40, 45, 0], [60, 30, 95, 0, -45, 0, 80], [-30, 90, -40, -90, -90, 0, 0], [60, 40, -40, 90, -90, 0, 0], [0, -40, 80, 0, 80, 0, 80]]
         for move in rodeoMovements:
@@ -229,7 +227,7 @@ class edo(object):
 
         time.sleep(1)
         if self.stepByStep:
-            while self.getValues()['machineState'].get('current_state') != 2:
+            while self.getJoints()['MachineState'].get('current_state') != 2:
                 time.sleep(0.5)
 
         self.MovementCommand.publish(roslibpy.Message(self.command))
@@ -240,7 +238,7 @@ class edo(object):
     #JOINT MOVE
     #def move_joint(self,ovr=30, j1=0.0, j2=0.0, j3=0.0, j4=0.0, j5=0.0, j6=0.0, j7=0.0):
     def moveJoints(self, j1 = 0.0, j2 = 0.0, j3 = 0.0, j4 = 0.0, j5 = 0.0, j6 = 0.0):
-        if j1 < -178 or j1 > 178:
+        if (j1 < -178 or j1 > 178):
             print('ERROR. J1 value not acceptable.')
             return
         if j2 < -99 or j2 > 99:
@@ -272,7 +270,7 @@ class edo(object):
         #    print('Max override set equal to 100%')
             time.sleep(1)
             if self.stepByStep:
-                while self.getValues()['machineState'].get('current_state') != 2:
+                while self.getJoints()['MachineState'].get('current_state') != 2:
                     time.sleep(0.5)
 
             self.MovementCommand.publish(roslibpy.Message(self.command))
@@ -302,7 +300,7 @@ class edo(object):
 
             time.sleep(1)
             if self.stepByStep:
-                while self.getValues()['machineState'].get('current_state') != 2:
+                while self.getJoints()['MachineState'].get('current_state') != 2:
                     time.sleep(0.5)
         
             self.MovementCommand.publish(roslibpy.Message(self.command))
@@ -324,7 +322,7 @@ class edo(object):
         #    print('Max override set equal to 100%')
         time.sleep(1)
         if self.stepByStep:
-            while self.getValues()['machineState'].get('current_state') != 2:
+            while self.getJoints()['MachineState'].get('current_state') != 2:
                 time.sleep(0.5)
 
         self.MovementCommand.publish(roslibpy.Message(self.command))
@@ -334,7 +332,7 @@ class edo(object):
     #GRIPPER MOVE
     #def move_gripper(self,ovr=30, j7=0.0):
     def moveGripper(self,j7=0.0):
-        self.command = {**self.command_template}
+        self.command = {**self.commandTemplate}
         # Stroke end check
         if j7 < 0: 
             print('ATTENTION. Min gripper width = 0 mm.')
@@ -359,13 +357,13 @@ class edo(object):
         
         
     def gripperOpen(self, opening = 80):
-        moveGripper(self,j7=opening)
+        self.moveGripper(j7=opening)
         
         if self.verbose: print('Gripper opened')
 
 
     def gripperClose(self, opening = 0):
-        moveGripper(self,j7=opening)
+        self.moveGripper(j7=opening)
         if self.verbose: print('Gripper closed')
 
 
@@ -373,16 +371,16 @@ class edo(object):
         self.listenValues()
         time.sleep(1)
         if toInteger:
-            return round(self.getValues()['jointPosition'][6])
+            return round(self.getJoints()['jointPosition'][6])
         else:
-            return self.getValues()['jointPosition'][6]
+            return self.getJoints()['jointPosition'][6]
     
 
 
     
     #JOINT JOG MOVE  
-    def jog_joint(self,ovr=100, j1=0.0, j2=0.0, j3=0.0, j4=0.0, j5=0.0, j6=0.0, j7=0.0):
-        self.command = {**self.command_template}
+    def jogJoint(self,ovr=100, j1=0.0, j2=0.0, j3=0.0, j4=0.0, j5=0.0, j6=0.0, j7=0.0):
+        self.command = {**self.commandTemplate}
         self.command['move_command'] = MoveCommand.EXE_JOGMOVE.value
         self.command['move_type'] = MoveType.JOINT.value
         self.command['ovr'] = ovr
@@ -399,16 +397,16 @@ class edo(object):
         if self.verbose : print('Jog Joint')
     
     #STOP JOG
-    def jog_stop(self):
-        self.command = {**self.command_template}
+    def jogStop(self):
+        self.command = {**self.commandTemplate}
         self.command['move_command'] = MoveCommand.EXE_JOGSTOP.value
         self.command['delay'] = Delay.FLY.value
         self.JogCommand.publish(roslibpy.Message(self.command))
         if self.verbose : print('Jog Stop')
     
     #CARTESIAN JOG MOVE  
-    def jog_cartesian(self,ovr=100, x=0, y=0, z=0, a=0, e=0, r=0):
-        self.command = {**self.command_template}
+    def jogCartesian(self,ovr=100, x=0, y=0, z=0, a=0, e=0, r=0):
+        self.command = {**self.commandTemplate}
         self.command['move_command'] = MoveCommand.EXE_JOGMOVE.value
         self.command['move_type'] = MoveType.LINEAR.value
         self.command['ovr'] = ovr
@@ -426,8 +424,8 @@ class edo(object):
         if self.verbose : print('Jog Cartesian')
      
     #EXTENDED MOVE  
-    def move_cartesianX(self,ovr=30, x=480, y=23, z=640, a=-12, e=108, r=0, j7=0):
-        self.command = {**self.command_template}
+    def moveCartesianX(self,ovr=30, x=480, y=23, z=640, a=-12, e=108, r=0, j7=0):
+        self.command = {**self.commandTemplate}
         self.command['move_command'] = MoveCommand.EXE_MOVE.value
         self.command['move_type'] = MoveType.LINEAR.value
         self.command['ovr'] = ovr
@@ -448,8 +446,8 @@ class edo(object):
         if self.verbose : print('Move Cartesian Extended')
     
     #CIRCULAR MOVE
-    def move_circular(self,ovr=30, x1=447, y1=0, z1=180, a1=0, e1=180, r1=0, x2=0, y2=432, z2=15, a2=180, e2=0, r2=180):
-        self.command = {**self.command_template}
+    def moveCircular(self,ovr=30, x1=447, y1=0, z1=180, a1=0, e1=180, r1=0, x2=0, y2=432, z2=15, a2=180, e2=0, r2=180):
+        self.command = {**self.commandTemplate}
         self.command['move_command'] = MoveCommand.EXE_MOVE.value
         self.command['move_type'] = MoveType.CIRCULAR.value
         self.command['ovr'] = ovr
@@ -470,8 +468,8 @@ class edo(object):
         if self.verbose : print('Move Circular')
     
     #CIRCULAR MOVE EXTENDED
-    def move_circularX(self,ovr=30, x1=480, y1=23, z1=640, a1=-12, e1=108, r1=0, j71=0, x2=480, y2=23, z2=640, a2=-12, e2=108, r2=0, j72=0):
-        self.command = {**self.command_template}
+    def moveCircularX(self,ovr=30, x1=480, y1=23, z1=640, a1=-12, e1=108, r1=0, j71=0, x2=480, y2=23, z2=640, a2=-12, e2=108, r2=0, j72=0):
+        self.command = {**self.commandTemplate}
         self.command['move_command'] = MoveCommand.EXE_MOVE.value
         self.command['move_type'] = MoveType.CIRCULAR.value
         self.command['ovr'] = ovr
@@ -492,8 +490,8 @@ class edo(object):
         if self.verbose : print('Move Circular Extended')
     
     #CANCEL MOVE
-    def move_cancel(self):
-        self.command = {**self.command_template}
+    def moveCancel(self):
+        self.command = {**self.commandTemplate}
         self.command['move_command'] = MoveCommand.CANCEL_MOVE.value
         self.command['move_type'] = MoveType.JOINT.value
         self.command['target']['data_type'] = DataType.E_MOVE_POINT_JOINT.value
@@ -504,8 +502,8 @@ class edo(object):
 
     #COOPERATIVE MOVE
     #def move_cooperative(self,ovr=30, x=480, y=23, z=640, a=-12, e=108, r=0, xf=480, yf=23, zf=640, af=-12, ef=108, rf=0):
-    def move_cooperative(self,x=480, y=23, z=640, a=-12, e=108, r=0, xf=480, yf=23, zf=640, af=-12, ef=108, rf=0):
-        self.command = {**self.command_template}
+    def moveCooperative(self,x=480, y=23, z=640, a=-12, e=108, r=0, xf=480, yf=23, zf=640, af=-12, ef=108, rf=0):
+        self.command = {**self.commandTemplate}
         self.command['move_command'] = MoveCommand.EXE_MOVE.value
         self.command['move_type'] = MoveType.LINEAR.value
         #self.command['ovr'] = ovr
@@ -522,8 +520,8 @@ class edo(object):
         if self.verbose : print('Move Cooperative')
         
     #COOPERATIVE EXTENDED MOVE
-    def move_cooperativeX(self,ovr=30, x=480, y=23, z=640, a=-12, e=108, r=0, j7=0, xf=480, yf=23, zf=640, af=-12, ef=108, rf=0):
-        self.command = {**self.command_template}
+    def moveCooperativeX(self,ovr=30, x=480, y=23, z=640, a=-12, e=108, r=0, j7=0, xf=480, yf=23, zf=640, af=-12, ef=108, rf=0):
+        self.command = {**self.commandTemplate}
         self.command['move_command'] = MoveCommand.EXE_MOVE.value
         self.command['move_type'] = MoveType.LINEAR.value
         self.command['ovr'] = ovr
@@ -545,9 +543,9 @@ class edo(object):
         if self.verbose : print('Move Cooperative Extended')
         
     #LISTEN_JOINT_STATE
-    def listen_JointState(self):
+    def listenJointState(self):
         #self.JointState.subscribe(lambda message: print('messaggio = ' + message['data']))
-        self.JointState.subscribe(self.fill_jointStateValues)
+        self.JointState.subscribe(self.fillJointStateValues)
       
     #FILL VALUES
     def fillJointStateValues(self, message):
@@ -564,42 +562,46 @@ class edo(object):
         self.jointStateValues['velocity'] = self.jointStateVelocity
         self.jointStateValues['currrent'] = self.jointStateCurrent
         
+    def getJoints(self):
+        return self.jointStateValues
+        
     #LISTEN_CARTESIAN_POSE
-    def listen_CartesianPosition(self):
-        self.CartesianPosition.subscribe(self.fill_CartesianPosition)
+    def listenCartesianPosition(self):
+        self.CartesianPosition.subscribe(self.fillCartesianPosition)
         
     #FILL_JOINT_STATE
-    def fill_CartesianPosition(self,message):
+    def fillCartesianPosition(self,message):
         #print(message)
         cartesianpos = message
         self.jointStateValues['cartesianPosition'] = [cartesianpos['x'], cartesianpos['y'], cartesianpos['z'] ,cartesianpos['a'], cartesianpos['e'], cartesianpos['r']]
         
     #GET_JOINT_STATE
-    def get_JointState(self):
+    def getJointState(self):
         return self.jointStateValues
         
+    
     #UNLISTEN_CARTESIAN_POSE
-    def unlisten_CartesianPosition(self):
+    def unlistenCartesianPosition(self):
         self.CartesianPosition.unsubscribe()
         if self.verbose : print('Cartesian Position Unsubscribed')
         
     #UNLISTEN_JOINT_STATE
-    def unlisten_JointState(self):
+    def unlistenJointState(self):
         self.JointState.unsubscribe()
         if self.verbose : print('Joint State Unsubscribed')
         
     #LISTEN_MOVEMENT_ACK
-    def listen_MovementAck(self):
+    def listenMovementAck(self):
         self.MovementFeedback.subscribe(self.fill_MovementAck)
         
     #FILL_MOVEMENT_ACK
-    def fill_MovementAck(self,message):
+    def fillMovementAck(self,message):
         #print(message)
         movement_ack = message
         self.jointStateValues['movementFeedback'] = movement_ack
     
     #UNLISTEN_MOVEMENT_ACK
-    def unlisten_JointState(self):
+    def unlistenJointState(self):
         self.MovementFeedback.unsubscribe()
         if self.verbose : print('Movement Feedback Unsubscribed')
     
