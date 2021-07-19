@@ -2,8 +2,8 @@
 ## 
 ## @file SDK_python.py
 ## @author  Comau
-## @version 1.0
-## @date 07.11.2019
+## @version 2.0
+## @date 15.07.2021
 ## 
 ## @section LICENSE
 ##    This  material  is the exclusive property of Comau S.p.A.  and must be
@@ -19,4 +19,4 @@
 ##                          Comau S.p.A.
 ## 
 __author__ = u'Comau'
-__version__ = (1, 0, 0)
+__version__ = (2, 0, 0)
