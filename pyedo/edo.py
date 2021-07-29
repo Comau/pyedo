@@ -6,19 +6,7 @@
 ## @version 2.0
 ## @date 15.07.2021
 ## 
-## @section LICENSE
-##    This  material  is the exclusive property of Comau S.p.A.  and must be
-##    returned   to   Comau   S.p.A.,   Robotics  Division,  Software  Group
-##    immediately   upon   request.    This  material  and  the  information
-##    illustrated or contained herein may not be used, reproduced, stored in
-##    a retrieval system, or transmitted in whole or in part in  any  way  -
-##    electronic, mechanical, photocopying, recording, or otherwise, without
-##    the prior written consent of Comau S.p.A..
-## 
-##                      All Rights Reserved
-##                      Copyright (C)  2020
-##                          Comau S.p.A.
-## 
+
 import time
 import roslibpy
 from array import *
@@ -31,35 +19,35 @@ from enum import Enum, unique
 
 @unique
 class MoveCommand(Enum):
-    EXE_JOGMOVE = 74 # 'J'
-    EXE_JOGSTOP = 83 # 'S'
-    EXE_MOVE = 77 # 'M'
-    PAUSE = 80 # 'P' Pause movement execution
-    RESUME = 82 # 'R' Resume movement execution
-    CANCEL_MOVE = 67 # 'C' Cancel movement execution and empty robot queue
-
-@unique
-class MoveType(Enum):
-    JOINT = 74 # 'J'
-    LINEAR = 76 # 'L',
-    CIRCULAR = 67 # 'C'
-
-@unique
-class DataType(Enum):
-    E_MOVE_POINT_JOINT = 74 # 'J'
-    E_MOVE_POINT_POSITION = 80 # 'P'
-    E_MOVE_POINT_XTND_POS = 88 #'X'
+    EXE_JOGMOVE           = 74  # 'J'
+    EXE_JOGSTOP           = 83  # 'S'
+    EXE_MOVE              = 77  # 'M'
+    PAUSE                 = 80  # 'P' Pause movement execution
+    RESUME                = 82  # 'R' Resume movement execution
+    CANCEL_MOVE           = 67  # 'C' Cancel movement execution and empty robot queue
+                                
+@unique                         
+class MoveType(Enum):           
+    JOINT                 = 74  # 'J'
+    LINEAR                = 76  # 'L'
+    CIRCULAR              = 67  # 'C'
+                                
+@unique                         
+class DataType(Enum):           
+    E_MOVE_POINT_JOINT    = 74  # 'J'
+    E_MOVE_POINT_POSITION = 80  # 'P'
+    E_MOVE_POINT_XTND_POS = 88  # 'X'
 
 @unique
 class MaskType(Enum):
-    JOINT_MASK6 = 63 # Joint Mask for 6 joints
-    JOINT_MASK7 = 127 # Joint Mask for 6 joints + gripper
-    JOINT_MASK7_EXT = 64 # Joint Mask for 7th axis
+    JOINT_MASK6           = 63  # Joint Mask for 6 joints
+    JOINT_MASK7           = 127 # Joint Mask for 6 joints + gripper
+    JOINT_MASK7_EXT       = 64  # Joint Mask for 7th axis
 
 @unique
 class Delay(Enum):
-    FLY = 255
-    ZERO_DELAY = 0
+    FLY                   = 255
+    ZERO_DELAY            = 0
 
 class edo(object):
     def __init__(self, host = '192.168.12.1', port = 9090, axes = 7): #default connection via wifi, connection via etehernet with '10.42.0.49'
@@ -133,7 +121,7 @@ class edo(object):
             "joints_mask": MaskType.JOINT_MASK7.value,
             "reduction_factor": 0.0
         }
-        self.JointInit.publish(roslibpy.Message(self.command))
+        self.JointInit.publish(roslibpy.Message(self.command)) 
         print('e.DO with Gripper has been initialized')
     
     # INITIALIZATION of the Robot with 6 Joints
@@ -143,12 +131,9 @@ class edo(object):
             "joints_mask": MaskType.JOINT_MASK6.value,
             "reduction_factor": 0.0
         }
-        self.JointInit.publish(roslibpy.Message(self.command))
+        self.JointInit.publish(roslibpy.Message(self.command)) 
         print('e.DO with 6 Joints has been initialized')
 
-    # INITIALIZATION of the Robot with the Gripper (default = 6 axes + gripper) [wrapper]
-    def initMyedo(self):
-        self.init7Axes()
         
     # STANDARD DISENGAGE of the Robot    
     def disengageStd(self):
@@ -199,21 +184,6 @@ class edo(object):
             print('ATTENTION. Min speed = 0%.')
             ovr = 0     
         self.commandTemplate['ovr'] = ovr
-        
-    def rodeo(self):
-        rodeoMovements = [[90, 50, -90, 0, 40, -90, 0], [-45, -50, 90, 0, -40, 45, 0], [60, 30, 95, 0, -45, 0, 80], [-30, 90, -40, -90, -90, 0, 0], [60, 40, -40, 90, -90, 0, 0], [0, -40, 80, 0, 80, 0, 80]]
-        for move in rodeoMovements:
-            self.command = {**self.commandTemplate}    
-            self.command['move_command'] = MoveCommand.EXE_MOVE.value
-            self.command['move_type'] = MoveType.JOINT.value
-            self.command['delay'] = Delay.FLY.value
-            self.command['target']['data_type'] = DataType.E_MOVE_POINT_JOINT.value
-            self.command['target']['joints_mask'] = MaskType.JOINT_MASK7.value
-            self.command['target']['joints_data'] = move
-
-            self.MovementCommand.publish(roslibpy.Message(self.command))
-
-        if self.verbose: print('Rodeo demo completed')
 
 
     #Move e.DO to vertical position (calibration)
@@ -356,42 +326,33 @@ class edo(object):
         if self.verbose : print('Move Gripper')
         
         
-    def gripperOpen(self, opening = 80):
-        self.moveGripper(j7=opening)
         
-        if self.verbose: print('Gripper opened')
-
-
-    def gripperClose(self, opening = 0):
-        self.moveGripper(j7=opening)
-        if self.verbose: print('Gripper closed')
-
-
-    def gripperWidth(self, toInteger = True): #F = return gripper width in float with 14 decimal values
+    def gripperWidth(self, toInteger = True): # if FALSE = return gripper width in float with 14 decimal values
         self.listenValues()
         time.sleep(1)
         if toInteger:
-            return round(self.getJoints()['jointPosition'][6])
+            return int(self.jointStatePosition[6])
         else:
-            return self.getJoints()['jointPosition'][6]
+            return self.jointStatePosition[6]
     
 
 
     
     #JOINT JOG MOVE  
-    def jogJoint(self,ovr=100, j1=0.0, j2=0.0, j3=0.0, j4=0.0, j5=0.0, j6=0.0, j7=0.0):
+    #def jogJoint(self,ovr=100, j1=0.0, j2=0.0, j3=0.0, j4=0.0, j5=0.0, j6=0.0, j7=0.0):
+    def jogJoint(self, j1=0.0, j2=0.0, j3=0.0, j4=0.0, j5=0.0, j6=0.0, j7=0.0):
         self.command = {**self.commandTemplate}
         self.command['move_command'] = MoveCommand.EXE_JOGMOVE.value
         self.command['move_type'] = MoveType.JOINT.value
-        self.command['ovr'] = ovr
+        #self.command['ovr'] = ovr
         self.command['delay'] = Delay.FLY.value
         self.command['target']['data_type'] = DataType.E_MOVE_POINT_JOINT.value
         self.command['target']['joints_mask'] = MaskType.JOINT_MASK7.value
         self.command['target']['joints_data'] = [j1, j2, j3, j4, j5, j6, j7]
         
-        if ovr>100:
-            self.command['ovr'] = 100
-            print('Max override set equal to 100%')
+        #if ovr>100:
+        #    self.command['ovr'] = 100
+        #    print('Max override set equal to 100%')
         
         self.JogCommand.publish(roslibpy.Message(self.command))
         if self.verbose : print('Jog Joint')
@@ -405,30 +366,32 @@ class edo(object):
         if self.verbose : print('Jog Stop')
     
     #CARTESIAN JOG MOVE  
-    def jogCartesian(self,ovr=100, x=0, y=0, z=0, a=0, e=0, r=0):
+    #def jogCartesian(self,ovr=100, x=0, y=0, z=0, a=0, e=0, r=0):
+    def jogCartesian(self, x=0, y=0, z=0, a=0, e=0, r=0):
         self.command = {**self.commandTemplate}
         self.command['move_command'] = MoveCommand.EXE_JOGMOVE.value
         self.command['move_type'] = MoveType.LINEAR.value
-        self.command['ovr'] = ovr
+        #self.command['ovr'] = ovr
         self.command['delay'] = Delay.FLY.value
         self.command['target']['data_type'] = DataType.E_MOVE_POINT_POSITION.value
         self.command['target']['joints_mask'] = MaskType.JOINT_MASK7.value
         self.command['target']['cartesian_data'] = {"x": x, "y": y, "z": z, "a": a, "e": e, "r": r, "config_flags": ''}
         
         
-        if ovr>100:
-            self.command['ovr'] = 100
-            print('Max override set equal to 100%')
+        #if ovr>100:
+        #    self.command['ovr'] = 100
+        #    print('Max override set equal to 100%')
         
         self.JogCommand.publish(roslibpy.Message(self.command))
         if self.verbose : print('Jog Cartesian')
      
     #EXTENDED MOVE  
-    def moveCartesianX(self,ovr=30, x=480, y=23, z=640, a=-12, e=108, r=0, j7=0):
+    #def moveCartesianX(self,ovr=30, x=480, y=23, z=640, a=-12, e=108, r=0, j7=0):
+    def moveCartesianX(self, x=480, y=23, z=640, a=-12, e=108, r=0, j7=0):
         self.command = {**self.commandTemplate}
         self.command['move_command'] = MoveCommand.EXE_MOVE.value
         self.command['move_type'] = MoveType.LINEAR.value
-        self.command['ovr'] = ovr
+        #self.command['ovr'] = ovr
         self.command['target']['data_type'] = DataType.E_MOVE_POINT_XTND_POS.value
         self.command['target']['joints_mask'] = MaskType.JOINT_MASK7_EXT.value
         self.command['target']['joints_data'] = [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, j7]
@@ -438,19 +401,20 @@ class edo(object):
         self.command['via']['joints_data'] = [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, j7]
         self.command['via']['cartesian_data'] = {"x": x, "y": y, "z": z, "a": a, "e": e, "r": r, "config_flags": ''}
         
-        if ovr>100:
-            self.command['ovr'] = 100
-            print('Max override set equal to 100%')
+        #if ovr>100:
+        #    self.command['ovr'] = 100
+        #    print('Max override set equal to 100%')
         
         self.MovementCommand.publish(roslibpy.Message(self.command))
         if self.verbose : print('Move Cartesian Extended')
     
     #CIRCULAR MOVE
-    def moveCircular(self,ovr=30, x1=447, y1=0, z1=180, a1=0, e1=180, r1=0, x2=0, y2=432, z2=15, a2=180, e2=0, r2=180):
+    #def moveCircular(self,ovr=30, x1=447, y1=0, z1=180, a1=0, e1=180, r1=0, x2=0, y2=432, z2=15, a2=180, e2=0, r2=180):
+    def moveCircular(self, x1=447, y1=0, z1=180, a1=0, e1=180, r1=0, x2=0, y2=432, z2=15, a2=180, e2=0, r2=180):
         self.command = {**self.commandTemplate}
         self.command['move_command'] = MoveCommand.EXE_MOVE.value
         self.command['move_type'] = MoveType.CIRCULAR.value
-        self.command['ovr'] = ovr
+        #self.command['ovr'] = ovr
         self.command['target']['data_type'] = DataType.E_MOVE_POINT_POSITION.value
         self.command['target']['joints_mask'] = MaskType.JOINT_MASK7.value
         self.command['target']['joints_data'] = [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
@@ -460,19 +424,20 @@ class edo(object):
         self.command['via']['joints_data'] = [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
         self.command['via']['cartesian_data'] = {"x": x2, "y": y2, "z": z2, "a": a2, "e": e2, "r": r2, "config_flags": ''}
         
-        if ovr>100:
-            self.command['ovr'] = 100
-            print('Max override set equal to 100%')
+        #if ovr>100:
+        #    self.command['ovr'] = 100
+        #    print('Max override set equal to 100%')
         
         self.MovementCommand.publish(roslibpy.Message(self.command))
         if self.verbose : print('Move Circular')
     
     #CIRCULAR MOVE EXTENDED
-    def moveCircularX(self,ovr=30, x1=480, y1=23, z1=640, a1=-12, e1=108, r1=0, j71=0, x2=480, y2=23, z2=640, a2=-12, e2=108, r2=0, j72=0):
+    #def moveCircularX(self,ovr=30, x1=480, y1=23, z1=640, a1=-12, e1=108, r1=0, j71=0, x2=480, y2=23, z2=640, a2=-12, e2=108, r2=0, j72=0):
+    def moveCircularX(self, x1=480, y1=23, z1=640, a1=-12, e1=108, r1=0, j71=0, x2=480, y2=23, z2=640, a2=-12, e2=108, r2=0, j72=0):
         self.command = {**self.commandTemplate}
         self.command['move_command'] = MoveCommand.EXE_MOVE.value
         self.command['move_type'] = MoveType.CIRCULAR.value
-        self.command['ovr'] = ovr
+        #self.command['ovr'] = ovr
         self.command['target']['data_type'] = DataType.E_MOVE_POINT_XTND_POS.value
         self.command['target']['joints_mask'] = MaskType.JOINT_MASK7.value
         self.command['target']['joints_data'] = [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, j71]
@@ -482,9 +447,9 @@ class edo(object):
         self.command['via']['joints_data'] = [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, j72]
         self.command['via']['cartesian_data'] = {"x": x2, "y": y2, "z": z2, "a": a2, "e": e2, "r": r2, "config_flags": ''}
         
-        if ovr>100:
-            self.command['ovr'] = 100
-            print('Max override set equal to 100%')
+        #if ovr>100:
+        #    self.command['ovr'] = 100
+        #    print('Max override set equal to 100%')
         
         self.MovementCommand.publish(roslibpy.Message(self.command))
         if self.verbose : print('Move Circular Extended')
@@ -520,11 +485,12 @@ class edo(object):
         if self.verbose : print('Move Cooperative')
         
     #COOPERATIVE EXTENDED MOVE
-    def moveCooperativeX(self,ovr=30, x=480, y=23, z=640, a=-12, e=108, r=0, j7=0, xf=480, yf=23, zf=640, af=-12, ef=108, rf=0):
+    #def moveCooperativeX(self,ovr=30, x=480, y=23, z=640, a=-12, e=108, r=0, j7=0, xf=480, yf=23, zf=640, af=-12, ef=108, rf=0):
+    def moveCooperativeX(self, x=480, y=23, z=640, a=-12, e=108, r=0, j7=0, xf=480, yf=23, zf=640, af=-12, ef=108, rf=0):
         self.command = {**self.commandTemplate}
         self.command['move_command'] = MoveCommand.EXE_MOVE.value
         self.command['move_type'] = MoveType.LINEAR.value
-        self.command['ovr'] = ovr
+        #self.command['ovr'] = ovr
         self.command['target']['data_type'] = DataType.E_MOVE_POINT_XTND_POS.value
         self.command['target']['joints_mask'] = MaskType.JOINT_MASK7_EXT.value
         self.command['target']['joints_data'] = [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, j7]
@@ -535,65 +501,72 @@ class edo(object):
         self.command['via']['cartesian_data'] = {"x": x, "y": y, "z": z, "a": a, "e": e, "r": r, "config_flags": ''}
         self.command['frame'] = {"x": xf, "y": yf, "z": zf, "a": af, "e": ef, "r": rf}
         
-        if ovr>100:
-            self.command['ovr'] = 100
-            print('Max override set equal to 100%')
+        #if ovr>100:
+        #    self.command['ovr'] = 100
+        #    print('Max override set equal to 100%')
         
         self.MovementCommand.publish(roslibpy.Message(self.command))
         if self.verbose : print('Move Cooperative Extended')
         
-    #LISTEN_JOINT_STATE
-    def listenJointState(self):
-        #self.JointState.subscribe(lambda message: print('messaggio = ' + message['data']))
-        self.JointState.subscribe(self.fillJointStateValues)
-      
+
     #FILL VALUES
     def fillJointStateValues(self, message):
         self.joints = message['joints'];
         self.jointStatePosition = []
         self.jointStateVelocity = []
-        self.jointStateCurrent = []
+        self.jointStateCurrent  = []
         for vi_Idx in range(len(self.joints)):
             self.jointStatePosition.append(self.joints[vi_Idx]['position'])
             self.jointStateVelocity.append(self.joints[vi_Idx]['velocity'])
             self.jointStateCurrent.append(self.joints[vi_Idx]['current'])
         
         self.jointStateValues['jointPosition'] = self.jointStatePosition
-        self.jointStateValues['velocity'] = self.jointStateVelocity
-        self.jointStateValues['currrent'] = self.jointStateCurrent
-        
+        self.jointStateValues['velocity']      = self.jointStateVelocity
+        self.jointStateValues['currrent']      = self.jointStateCurrent
+    
+    # Print Joint values rounded to the 4th decimal
     def getJoints(self):
-        return self.jointStateValues
+        return [round(float(i),4) for i in self.jointStatePosition]
+    # Print Cartesian X Y Z values rounded to the 4th decimal
+    def getCartesian(self):
+        return [round(float(i),4) for i in self.jointStateValues['cartesianPosition'][0:3]]
+    # Print Cartesian values rounded to the 4th decimal
+    def getCartesianFull(self):
+        return [round(float(i),4) for i in self.jointStateValues['cartesianPosition']]
+    # Print gripper opening value in [mm] rounded to the 4th decimal
+    def getGripper(self):
+        return round(float(self.jointStatePosition[6]),4)
         
+    #LISTEN_MOVEMENT_ACK
+    def listenMovementAck(self):
+        self.MovementFeedback.subscribe(self.fillMovementAck)
+        if self.verbose : print('Subscribed to Movement Acknowledge')
     #LISTEN_CARTESIAN_POSE
     def listenCartesianPosition(self):
         self.CartesianPosition.subscribe(self.fillCartesianPosition)
-        
+        if self.verbose : print('Subscribed to Cartesian Position')
+    #LISTEN_JOINT_STATE
+    def listenJointState(self):
+        #self.JointState.subscribe(lambda message: print('messaggio = ' + message['data']))
+        self.JointState.subscribe(self.fillJointStateValues)
+        if self.verbose : print('Subscribed to Joint Position')
+      
     #FILL_JOINT_STATE
     def fillCartesianPosition(self,message):
         #print(message)
         cartesianpos = message
         self.jointStateValues['cartesianPosition'] = [cartesianpos['x'], cartesianpos['y'], cartesianpos['z'] ,cartesianpos['a'], cartesianpos['e'], cartesianpos['r']]
+     
+    #METHODS FOR USING VALUES GIVEN BY E.DO
+    def listenValues(self):
+        self.listenCartesianPosition()
+        self.listenJointState()
+        if self.verbose: print('Subscribed')
         
     #GET_JOINT_STATE
     def getJointState(self):
-        return self.jointStateValues
-        
-    
-    #UNLISTEN_CARTESIAN_POSE
-    def unlistenCartesianPosition(self):
-        self.CartesianPosition.unsubscribe()
-        if self.verbose : print('Cartesian Position Unsubscribed')
-        
-    #UNLISTEN_JOINT_STATE
-    def unlistenJointState(self):
-        self.JointState.unsubscribe()
-        if self.verbose : print('Joint State Unsubscribed')
-        
-    #LISTEN_MOVEMENT_ACK
-    def listenMovementAck(self):
-        self.MovementFeedback.subscribe(self.fill_MovementAck)
-        
+        return [round(float(i),4) for i in self.jointStateValues]
+   
     #FILL_MOVEMENT_ACK
     def fillMovementAck(self,message):
         #print(message)
@@ -604,4 +577,74 @@ class edo(object):
     def unlistenJointState(self):
         self.MovementFeedback.unsubscribe()
         if self.verbose : print('Movement Feedback Unsubscribed')
-    
+    #UNLISTEN_CARTESIAN_POSE
+    def unlistenCartesianPosition(self):
+        self.CartesianPosition.unsubscribe()
+        if self.verbose : print('Cartesian Position Unsubscribed')
+
+# Class developed to extend edo class for euducational purposes
+# 
+# Put here all specific functions with data or demo purposes
+class eduedo(edo):
+    def __init__(self, host = '192.168.12.1', port = 9090, axes = 7):
+        edo.__init__(self, host, port, axes )
+        self.initMyedo()
+        
+        
+    # INITIALIZATION of the Robot with the Gripper (default = 6 axes + gripper) [wrapper]
+    def initMyedo(self):
+        self.init7Axes()
+        self.listenValues()
+        time.sleep(1)
+        print('e.Do is ready to have fun!')
+
+    # INITIALIZATION of the Robot with the Gripper (default = 6 axes + gripper) [wrapper]
+    def initMyedoVirtual(self):
+        self.init7Axes()
+        self.listenValues()
+        time.sleep(1)
+        self.calibAxes()
+        self.moveJoints()
+        self.gripperClose()
+        time.sleep(1)
+        print('e.Do is ready to have fun!')
+        
+    #DEMO of e.Do moving
+    def rodeo(self):
+        rodeoMovements = [[90, 50, -90, 0, 40, -90, 0], [-45, -50, 90, 0, -40, 45, 0], [60, 30, 95, 0, -45, 0, 80], [-30, 90, -40, -90, -90, 0, 0], [60, 40, -40, 90, -90, 0, 0], [0, -40, 80, 0, 80, 0, 80]]
+        for move in rodeoMovements:
+            self.command = {**self.commandTemplate}    
+            self.command['move_command'] = MoveCommand.EXE_MOVE.value
+            self.command['move_type'] = MoveType.JOINT.value
+            self.command['delay'] = Delay.FLY.value
+            self.command['target']['data_type'] = DataType.E_MOVE_POINT_JOINT.value
+            self.command['target']['joints_mask'] = MaskType.JOINT_MASK7.value
+            self.command['target']['joints_data'] = move
+            
+            self.MovementCommand.publish(roslibpy.Message(self.command))
+            
+        if self.verbose: print('Rodeo demo completed')
+        
+    # Gripper movements
+    def gripperOpen(self):
+        self.moveGripper(j7=80)
+        if self.verbose: print('Gripper opened')
+    def gripperClose(self):
+        self.moveGripper(j7=0)
+        if self.verbose: print('Gripper closed')
+        
+    def gripperOpenCart(self):
+        print('Gripper open Cartesian not yet supported')
+    def gripperCloseCart(self):
+        print('Gripper close Cartesian not yet supported')
+        
+    def setGripperOpen(self,j7):
+        self.moveGripper(j7)
+        if self.verbose: print('Gripper opened')
+    def setGripperOpenCart(self,j7):
+        print('Gripper open Cartesian not yet supported')
+        
+    def getMyedoState(self):
+        print('Joints:   ',self.getJoints())
+        print('Gripper:  ',self.getGripper())
+        print('Cartesian:',self.getCartesian())
