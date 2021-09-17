@@ -524,18 +524,18 @@ class edo(object):
         self.jointStateValues['velocity']      = self.jointStateVelocity
         self.jointStateValues['currrent']      = self.jointStateCurrent
     
-    # Print Joint values rounded to the 4th decimal
+    # Print Joint values rounded to the 2nd decimal
     def getJoints(self):
-        return [round(float(i),4) for i in self.jointStatePosition]
+        return [round(float(i),2) for i in self.jointStatePosition[0:-1]]
     # Print Cartesian X Y Z values rounded to the 4th decimal
     def getCartesian(self):
-        return [round(float(i),4) for i in self.jointStateValues['cartesianPosition'][0:3]]
+        return [round(float(i),2) for i in self.jointStateValues['cartesianPosition'][0:3]]
     # Print Cartesian values rounded to the 4th decimal
     def getCartesianFull(self):
-        return [round(float(i),4) for i in self.jointStateValues['cartesianPosition']]
-    # Print gripper opening value in [mm] rounded to the 4th decimal
-    def getGripper(self):
-        return round(float(self.jointStatePosition[6]),4)
+        return [round(float(i),2) for i in self.jointStateValues['cartesianPosition']]
+    # Print gripper opening value in [mm] rounded to the 2nd decimal
+    def getGripper(self): #TBD leggere da app_jnt_state -> AppStateArray
+        return round(float(self.jointStatePosition[6]),2)
         
     #LISTEN_MOVEMENT_ACK
     def listenMovementAck(self):
@@ -565,7 +565,7 @@ class edo(object):
         
     #GET_JOINT_STATE
     def getJointState(self):
-        return [round(float(i),4) for i in self.jointStateValues]
+        return [round(float(i),2) for i in self.jointStateValues]
    
     #FILL_MOVEMENT_ACK
     def fillMovementAck(self,message):
@@ -596,7 +596,7 @@ class eduedo(edo):
         self.init7Axes()
         self.listenValues()
         time.sleep(1)
-        print('e.Do is ready to have fun!')
+        print('e.DO is ready to have fun!')
 
     # INITIALIZATION of the Robot with the Gripper (default = 6 axes + gripper) [wrapper]
     def initMyedoVirtual(self):
@@ -607,9 +607,9 @@ class eduedo(edo):
         self.moveJoints()
         self.gripperClose()
         time.sleep(1)
-        print('e.Do is ready to have fun!')
+        print('e.DO is ready to have fun!')
         
-    #DEMO of e.Do moving
+    #DEMO of e.DO moving
     def rodeo(self):
         rodeoMovements = [[90, 50, -90, 0, 40, -90, 0], [-45, -50, 90, 0, -40, 45, 0], [60, 30, 95, 0, -45, 0, 80], [-30, 90, -40, -90, -90, 0, 0], [60, 40, -40, 90, -90, 0, 0], [0, -40, 80, 0, 80, 0, 80]]
         for move in rodeoMovements:
@@ -648,3 +648,4 @@ class eduedo(edo):
         print('Joints:   ',self.getJoints())
         print('Gripper:  ',self.getGripper())
         print('Cartesian:',self.getCartesian())
+        
