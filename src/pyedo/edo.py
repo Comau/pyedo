@@ -524,13 +524,13 @@ class edo(object):
         self.jointStateValues['velocity']      = self.jointStateVelocity
         self.jointStateValues['currrent']      = self.jointStateCurrent
     
-    # Print Joint values rounded to the 2nd decimal
+    # Print Joint values [deg] rounded to the 2nd decimal
     def getJoints(self):
         return [round(float(i),2) for i in self.jointStatePosition[0:-1]]
-    # Print Cartesian X Y Z values rounded to the 4th decimal
+    # Print Cartesian X Y Z values [mm] rounded to the 2th decimal
     def getCartesian(self):
         return [round(float(i),2) for i in self.jointStateValues['cartesianPosition'][0:3]]
-    # Print Cartesian values rounded to the 4th decimal
+    # Print Cartesian values rounded to the 2th decimal
     def getCartesianFull(self):
         return [round(float(i),2) for i in self.jointStateValues['cartesianPosition']]
     # Print gripper opening value in [mm] rounded to the 2nd decimal
@@ -645,7 +645,7 @@ class eduedo(edo):
         print('Gripper open Cartesian not yet supported')
         
     def getMyedoState(self):
-        print('Joints:   ',self.getJoints())
-        print('Gripper:  ',self.getGripper())
-        print('Cartesian:',self.getCartesian())
+        print('Joints:   ',self.getJoints(),' [deg]')
+        print('Cartesian:',self.getCartesianFull())
+        print('Gripper:  ',self.getGripper(),' [mm]')
         
