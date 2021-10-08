@@ -603,6 +603,8 @@ class eduedo(edo):
         self.init7Axes()
         self.listenValues()
         time.sleep(1)
+        self.disengageStd()
+        time.sleep(2)
         self.calibAxes()
         self.moveJoints()
         self.gripperClose()
