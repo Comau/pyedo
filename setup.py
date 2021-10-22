@@ -5,7 +5,7 @@ with open("README.md", "r", encoding="utf-8") as fh:
 
 setuptools.setup(
     name="pyedo",
-    version="0.4",
+    version="0.5",
     author="COMAU",
     author_email="info@edo.cloud",
     description="This package contains the SDK to program e.DO robot with Python",
