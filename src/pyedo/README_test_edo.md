@@ -21,16 +21,17 @@ Run the test_edo script. The process will go for a couple of minutes.
 
 The output you will obtain, if all the functions are running correctly, is something like the following :
 
+```
 Connected with e.DO
 e.DO with Gripper has been initialized
 e.DO is ready to have fun!
-........ATTENTION. Max gripper width = 80 mm.
+.Connected to ROS.
+.Disconnected from ROS: can connect to the app.
+......ATTENTION. Max gripper width = 80 mm.
 Gripper will open to 80 mm.
 ATTENTION. Min gripper width = 0 mm.
 Gripper will close to 0 mm.
-.......stepByStep mode OFF
-stepByStep mode ON
-..Attention: the gripper will open to 80mm
+.........Attention: the gripper will open to 80mm
 Attention: the gripper will close to 0
 .ATTENTION. Min gripper width = 0 mm.
 Gripper will close to 0 mm.
@@ -41,11 +42,11 @@ Attention: the gripper will open to 80mm
 .....ATTENTION. Max speed = 100%.
 ATTENTION. Min speed = 0%.
 .....
-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-
-Ran 29 tests in 234.322s
+----------------------------------------------------------------------
+Ran 29 tests in 235.132s
 
 OK
-
+```
 
 *Remember: tests are not always executed in the same order*
 

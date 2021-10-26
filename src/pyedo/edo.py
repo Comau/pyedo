@@ -153,12 +153,12 @@ class edo(object):
     # stepByStep MODE ON
     def stepByStepOn(self):
         self.stepByStep = True
-        print('stepByStep mode ON')
+        if self.verbose: print('stepByStep mode ON')
     
     # stepByStep MODE OFF
     def stepByStepOff(self):
         self.stepByStep = False
-        print('stepByStep mode OFF')
+        if self.verbose: print('stepByStep mode OFF')
     
     # INITIALIZATION of the Robot with the Gripper (default = 6 axes + gripper)
     def init7Axes(self):
@@ -378,7 +378,7 @@ class edo(object):
 
         :return None
         '''
-        if num not in range(1,6): 
+        if num not in range(1,7): 
             raise ValueError('ERROR. Choose a joint number between 1 and 6.')
 
         if (num == 1 or num == 4 or num == 6) and (value < -178 or value > 178):
@@ -1130,7 +1130,7 @@ class edo(object):
         self.client.close() # disconnects from ROS
         while self.client.is_connected:
             time.sleep(0.5)
-        if self.verbose : print('Disconnected from ROS')
+        print('Disconnected from ROS: can connect to the app.')
 
     def connect(self):
         '''Connects the e.Do to the websocket. Should be used when we want to riconnect after the disconnect() function was called.
@@ -1140,7 +1140,7 @@ class edo(object):
         self.client.connect()
         while not self.client.is_connected:
             time.sleep(0.5)
-        if self.verbose : print('Connected to ROS')
+        print('Connected to ROS.')
 
     def safeShutdown(self):
         '''Safe shutdown for the robot. Stops the main event loop.
@@ -1148,7 +1148,7 @@ class edo(object):
         :return None
         '''
         self.client.terminate()
-        if self.verbose : print('Disconnected and terminated')
+        print('Disconnected and terminated: can turn off e.DO safely.')
 
     def unblock(self):
         '''Unblocks the e.Do in case it is not responding to commands.

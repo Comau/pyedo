@@ -128,6 +128,15 @@ class TestEduedo(unittest.TestCase):
         edo.moveSingleJoint(5, self.joint6axis[4])
         time.sleep(0.5)
         self.assertEqual(edo.getJoints()[4], self.joint6axis[4])
+        
+        # Testing edge values
+        edo.moveSingleJoint(1, self.joint6axis[0])
+        time.sleep(0.5)
+        self.assertEqual(edo.getJoints()[0], self.joint6axis[0])
+        
+        edo.moveSingleJoint(6, self.joint6axis[5])
+        time.sleep(0.5)
+        self.assertEqual(edo.getJoints()[5], self.joint6axis[5])
 
         with self.assertRaises(ValueError):
             edo.moveSingleJoint(10,0)
