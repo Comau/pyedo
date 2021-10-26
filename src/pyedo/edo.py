@@ -110,7 +110,7 @@ class edo(object):
 
     def on_press(self,key):
         try:
-            if key.char == 'x':
+            if key.char == 'k':
                 self.interrupt = True
                 self.moveCancel()
                 if not self.stepByStep:
