@@ -79,7 +79,7 @@ Can move the joints to a cartesian_position indicated through the pose in (x1, y
 - moveCircularX(x1, y1, z1, a1, e1, r1,j71, x2, y2, z2, a2, e2, r2,j72) :
 Can move the joints to a cartesian_position indicated through the pose in (x1, y1, z1, a1, e1, r1) and the opening position in mm of the gripper in (j71) passing throug another cartesian_position indicated through the pose in (x2, y2, z2, a2, e2, r2) and the opening position in mm of the gripper  in (j72) with a velocity percentage determined by the setSpeed() function, creating a circular path
 - moveCancel() :
-Can cancel the buffer of the moves, helpful when some erros occur in generating a path trajectory which is not allowed
+Can cancel the buffer of the moves, helpful when some erros occur in generating a path trajectory which is not allowed. The cancel can be called by pressing the 'k' key, even in the blocking mode. Pressing 'k' stops the movement itself with a deceleration.
 - moveToHome() :
 Can move the joints to the Home position, sending a command zero to all the joints and the gripper, with a velocity percentage determined by the setSpeed() function
 - moveToWaitingPos() :
@@ -114,7 +114,7 @@ Calls listenCartesianPosition and listenJointState, hence starts the subscriptio
 - listenMovementAck() :
 Allows to start the subscribing on the topic related to the movement aknowledge, which sends a feedback on the movement.
 - waitAcknowledgment() :
-Waits for the end-of-movement acknowledge, if the setting is on stepByStep (default). The movement can be stopped by pressing the 'x' key, even in the blocking mode. Pressing 'x' stops the movement itself with a deceleration.
+Waits for the end-of-movement acknowledge, if the setting is on stepByStep (default).
 
 # UNLISTEN
 - unlistenValues() :
