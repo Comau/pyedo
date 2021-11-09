@@ -2,8 +2,8 @@
 ## 
 ## @file SDK_python.py
 ## @author  Comau
-## @version 1.0
-## @date 07.11.2019
+## @version 0.6
+## @date 09.11.2021
 ## 
 
 import time

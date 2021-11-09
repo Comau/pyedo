@@ -2,7 +2,7 @@ Pyedo
 =======================================
 
 This package contains the SDK to program e.DO robot with Python
-<img src="https://edo.cloud/wp-content/uploads/2018/12/edo-home.png" alt="pyedo logo" width="100px"/> 
+<img src="https://edo.cloud/wp-content/uploads/2021/06/edo-6-axes.png" alt="eDo robot" width="100px"/> 
 
 
 # Programming e.DO with Python
