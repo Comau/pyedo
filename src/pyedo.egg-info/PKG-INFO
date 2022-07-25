@@ -5,9 +5,7 @@ Summary: This package contains the SDK to program e.DO robot with Python
 Home-page: https://github.com/comau/pyedo
 Author: COMAU
 Author-email: info@edo.cloud
-License: UNKNOWN
 Project-URL: Bug Tracker, https://github.com/Comau/pyedo/issues
-Platform: UNKNOWN
 Classifier: Programming Language :: Python
 Classifier: License :: OSI Approved :: GNU General Public License v3 (GPLv3)
 Classifier: Operating System :: OS Independent
@@ -73,6 +71,11 @@ This method allows to calibrate all the joints:
 - calibAxes() :
 Can calibrate all the robot axes (MANDATORY TO HAVE THE JOINTS ALLIGNED WITH THE NOTCHES (Home Position)) 
 The calibration is possible only after the initizialization(init method) and the disengage of the brakes(disengage method)
+
+Example: (procedure to calibrate a real eDO)
+ 1) move the edo from the App to calibration position
+ 2) disconnect the App
+ 3) connect to eDo with python, now you can launch the calibAxes() safely
 
 # SET
 This method sets the joints speed parameter:
@@ -203,7 +206,7 @@ def StartUp(myedo):
 It is a class developed to facilitate the initialization and the use of the e.DO robot. It is initialized as follows:
 
 ```
-myedu = eduedo(myedo)
+myedo = eduedo(myedo)
 ```
 
 and it contains the following methods.
@@ -226,4 +229,3 @@ Connects the e.Do to the websocket. Should be used when we want to riconnect aft
 Allows a safe shutdown for the robot. Disconnects from ROS and stops the main event loop. This is not reversable. It should be called before manually shutting down the e.Do.
 - unblockMyedo() :
 When the e.Do is not responding to commands, this function unblocks the robot, brings the e.Do to the waiting position, and opens the gripper.
-
