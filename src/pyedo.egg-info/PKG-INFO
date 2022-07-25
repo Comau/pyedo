@@ -1,6 +1,6 @@
 Metadata-Version: 2.1
 Name: pyedo
-Version: 0.6
+Version: 0.7
 Summary: This package contains the SDK to program e.DO robot with Python
 Home-page: https://github.com/comau/pyedo
 Author: COMAU

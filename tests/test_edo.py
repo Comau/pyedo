@@ -3,7 +3,7 @@ import math
 
 import unittest
 import roslibpy
-from pyedo import eduedo
+from edo import eduedo
 
 edo = eduedo('10.42.0.49')
 

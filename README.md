@@ -58,6 +58,11 @@ This method allows to calibrate all the joints:
 Can calibrate all the robot axes (MANDATORY TO HAVE THE JOINTS ALLIGNED WITH THE NOTCHES (Home Position)) 
 The calibration is possible only after the initizialization(init method) and the disengage of the brakes(disengage method)
 
+Example: (procedure to calibrate a real eDO)
+ 1) move the edo from the App to calibration position
+ 2) disconnect the App
+ 3) connect to eDo with python, now you can launch the calibAxes() safely
+
 # SET
 This method sets the joints speed parameter:
 - setSpeed(ovr) :
@@ -187,7 +192,7 @@ def StartUp(myedo):
 It is a class developed to facilitate the initialization and the use of the e.DO robot. It is initialized as follows:
 
 ```
-myedu = eduedo(myedo)
+myedo = eduedo(myedo)
 ```
 
 and it contains the following methods.
