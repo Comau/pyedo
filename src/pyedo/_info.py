@@ -2,9 +2,9 @@
 ## 
 ## @file SDK_python.py
 ## @author  Comau
-## @version 2.0
-## @date 15.07.2021
+## @version 0.7
+## @date 25.07.2022
 ## 
 
 __author__ = u'Comau'
-__version__ = (2, 0, 0)
+__version__ = (0, 7, 0)

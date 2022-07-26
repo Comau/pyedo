@@ -3,8 +3,8 @@
 ## SP
 ## @file SDK_python.py
 ## @author  Comau
-## @version 2.0
-## @date 15.07.2021
+## @version 0.7
+## @date 25.07.2022
 ## 
 
 from platform import machine
@@ -125,7 +125,7 @@ class edo(object):
 
     # waiting for the aknowledgment to finish the move
     def waitAcknowledgment(self):
-        '''Wait for the end-of-movement acknowledge. The flag stepByStep must be true. The movement can be interrupted by pressing the 'x' key.
+        '''Wait for the end-of-movement acknowledge. The flag stepByStep must be true. The movement can be interrupted by pressing the 'k' key.
 
         :return None
         '''
@@ -353,18 +353,18 @@ class edo(object):
             raise ValueError('ERROR. J5 value not acceptable.')
         if j6 < -178 or j6 > 178:
             raise ValueError('ERROR. J6 value not acceptable.')
-        else:
-            self.command = {**self.commandTemplate}
-            self.command['move_command'] = MoveCommand.EXE_MOVE.value
-            self.command['move_type'] = MoveType.JOINT.value
-            self.command['target']['data_type'] = DataType.E_MOVE_POINT_JOINT.value
-            self.command['target']['joints_mask'] = MaskType.JOINT_MASK6.value
-            self.command['target']['joints_data'] = [j1, j2, j3, j4, j5, j6]
-            
-            self.MovementCommand.publish(roslibpy.Message(self.command))
-            
-            self.waitAcknowledgment()
-            if self.verbose: print('Move Joints')
+        
+        self.command = {**self.commandTemplate}
+        self.command['move_command'] = MoveCommand.EXE_MOVE.value
+        self.command['move_type'] = MoveType.JOINT.value
+        self.command['target']['data_type'] = DataType.E_MOVE_POINT_JOINT.value
+        self.command['target']['joints_mask'] = MaskType.JOINT_MASK6.value
+        self.command['target']['joints_data'] = [j1, j2, j3, j4, j5, j6]
+        
+        self.MovementCommand.publish(roslibpy.Message(self.command))
+        
+        self.waitAcknowledgment()
+        if self.verbose: print('Move Joints')
 
 
     def moveSingleJoint(self, num, value):
@@ -389,19 +389,22 @@ class edo(object):
 
         if num == 5 and (value < -103 or value > 103):
             raise ValueError('ERROR. Joint value not acceptable.')
-        else:
-            self.command = {**self.commandTemplate}
-            self.command['move_command'] = MoveCommand.EXE_MOVE.value
-            self.command['move_type'] = MoveType.JOINT.value
-            self.command['target']['data_type'] = DataType.E_MOVE_POINT_JOINT.value
-            self.command['target']['joints_mask'] = pow(2, num - 1)
-            self.command['target']['joints_data'] = [value, value, value, value, value, value]
 
-            
-            self.MovementCommand.publish(roslibpy.Message(self.command))
+        #Riferimento Task 6172
+        temp = self.getJoints()
+        self.moveJoints(temp[0], temp[1], temp[2], temp[3], temp[4], temp[5])
 
-            self.waitAcknowledgment()
-            if self.verbose: print('Move Single Joint')
+        self.command = {**self.commandTemplate}
+        self.command['move_command'] = MoveCommand.EXE_MOVE.value
+        self.command['move_type'] = MoveType.JOINT.value
+        self.command['target']['data_type'] = DataType.E_MOVE_POINT_JOINT.value
+        self.command['target']['joints_mask'] = pow(2, num - 1)
+        self.command['target']['joints_data'] = [value, value, value, value, value, value]
+        
+        self.MovementCommand.publish(roslibpy.Message(self.command))
+
+        self.waitAcknowledgment()
+        if self.verbose: print('Move Single Joint')
             
 
     #CARTESIAN MOVE  
@@ -1192,8 +1195,8 @@ class eduedo(edo):
         self.disengageStd()
         time.sleep(2)
         self.calibAxes()
-        self.moveJoints()
-        self.gripperClose()
+        #self.moveJoints()
+        #self.gripperClose()
         time.sleep(1)
         print('e.DO is ready to have fun!')
         
@@ -1226,20 +1229,22 @@ class eduedo(edo):
         '''
         self.moveGripper(j7=80)
         if self.verbose: print('Gripper opened')
+        
     def gripperClose(self):
         '''Close the gripper.
 
         :return None
         '''
-        stepOff = False
-        if self.stepByStep:
-            self.stepByStepOff()
-            stepOff = True
+		# A problem was returned with StepOn/Off if the move in cancelled midway
+        #stepOff = False
+        #if self.stepByStep:
+        #    self.stepByStepOff()
+        #    stepOff = True
         self.moveGripper(j7=0)
         if self.verbose: print('Gripper closed')
-        time.sleep(1)
-        if stepOff:
-            self.stepByStepOn()
+        #time.sleep(1)
+        #if stepOff:
+        #    self.stepByStepOn()
         
     def gripperOpenCart(self):
         '''Not yet supported!
@@ -1260,6 +1265,7 @@ class eduedo(edo):
         '''
         self.moveGripper(j7)
         if self.verbose: print('Gripper opened')
+        
     def setGripperOpenCart(self,j7):
         '''Not yet supported!
         '''
