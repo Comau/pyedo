@@ -129,6 +129,7 @@ class edo(object):
 
         :return None
         '''
+        self.listenMovementAck()
         time.sleep(1)
         if self.stepByStep:
             while self.movementAckValue['movementFeedback']['type'] != 2:

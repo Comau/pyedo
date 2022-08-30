@@ -69,8 +69,27 @@ This method sets the joints speed parameter:
  Sets the speed, in percentage value, of all joints. The parameter of the function is a number between «0» and «100». The default value of ovr is «100».
  It prints a warning if the parameter passed is not in the accepted range.
 
+ # LISTEN
+- listenValues() :
+Calls listenMovementAck, listenCartesianPosition and listenJointState, hence starts the subscription to both cartesian and state variables. Calls all the functions described below.
+    - listenJointState() :
+	Allows to start the subscribing on the topic related to these informations:
+	[Position 
+	Velocity
+	Current]
+	- listenCartesianPosition() :
+	Allows to start the subscribing on the topic related to the cartesian position (x,y,z,a,e,r)
+    - listenMovementAck() :
+    Allows to start the subscribing on the topic related to the movement aknowledge, which sends a feedback on the movement.
+        - waitAcknowledgment() :
+        Waits for the end-of-movement acknowledge, if the setting is stepByStep = True (default).
+
 # MOVE
-This method allows to move the e.DO robot. The setting automatically waits for the movement to be over before giving the next command (can be deactivated with stepByStepOff). The pianification of the trajectory can be performed in different ways:
+This methods allows to move the e.DO robot. 
+By default each move waits the movement to be over before executing the next command (this behaviour can be deactivated with stepByStepOff).
+The moves can be stopped by thyping the letter "k" on the command windows while they are executing
+
+The planning of the trajectory can be performed in different ways:
 - moveJoints(j1, j2, j3, j4, j5, j6) :
 Can move the joints to a joint_position indicated through the angles in degrees (j1, , j2, j3, j4, j5, j6) with a velocity percentage determined by the setSpeed() function
 - moveSingleJoint(num, value) :
@@ -106,24 +125,9 @@ Can move the joints in a cartesian_position, once coordinate per time for a delt
 - jogStop() :
 Can stop the joint movement.
 
-# LISTEN
-- listenValues() :
-Calls listenCartesianPosition and listenJointState, hence starts the subscription to both cartesian and state variables. Calls all the functions described below.
-	- listenJointState() :
-	Allows to start the subscribing on the topic related to these informations:
-	[Position 
-	Velocity
-	Current]
-	- listenCartesianPosition() :
-	Allows to start the subscribing on the topic related to the cartesian position (x,y,z,a,e,r)
-- listenMovementAck() :
-Allows to start the subscribing on the topic related to the movement aknowledge, which sends a feedback on the movement.
-- waitAcknowledgment() :
-Waits for the end-of-movement acknowledge, if the setting is on stepByStep (default).
-
 # UNLISTEN
 - unlistenValues() :
-Calls listenCartesianPosition and listenJointState, hence starts the subscription to both cartesian and state variables. Calls all the functions described below.
+Calls unlistenMovementAck, unlistenCartesianPosition and unlistenJointState, hence stops the subscription to both cartesian and state variables. Calls all the functions described below.
 	- unlistenJointState() :
 	Allows to stop the subscribing on the topic related to these informations:
 	[Position 
@@ -131,8 +135,8 @@ Calls listenCartesianPosition and listenJointState, hence starts the subscriptio
 	Current]
 	- unlistenCartesianPosition() :
 	Allows to stop the subscribing on the topic related to the cartesian position (x,y,z,a,e,r)
-- unlistenMovementAck() :
-Allows to stop the subscribing on the topic related to the movement aknowledge, which sends a feedback on the movement.
+    - unlistenMovementAck() :
+    Allows to stop the subscribing on the topic related to the movement aknowledge, which sends a feedback on the movement.
 
 # GET
 - getJointState() :
@@ -184,6 +188,7 @@ def StartUp(myedo):
     myedo.disengageStd()
     time.sleep(15)
     myedo.calibAxes() # Mandatory in HOME POSITION
+    myedo.listenValues()
 ```
 
 
