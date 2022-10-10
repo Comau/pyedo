@@ -3,7 +3,7 @@ import math
 
 import unittest
 import roslibpy
-from edo import eduedo
+from pyedo import eduedo
 
 edo = eduedo('10.42.0.49')
 
@@ -146,6 +146,12 @@ class TestEduedo(unittest.TestCase):
 
         with self.assertRaises(ValueError):
             edo.moveSingleJoint(2, -100)
+            
+        # Riferimento Task 6172
+        myedo.moveJoints(0, 40, 50, 0, 90, 0) 
+        myedo.moveSingleJoint(1, 36)
+        myedo.moveCartesian(326.3, 237, 80)
+        myedo.moveSingleJoint(1, 0)
 
 
     def test_moveCartesian(self):
